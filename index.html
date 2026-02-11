@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devine Power by Hettu | Traditional Astrology & Numerology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="celestial-overlay" aria-hidden="true"></div>
+
+  <header class="hero">
+    <div class="floating-icons" aria-hidden="true">
+      <span>☉</span>
+      <span>☾</span>
+      <span>✦</span>
+      <span>♃</span>
+      <span>♄</span>
+      <span>☌</span>
+    </div>
+
+    <nav class="top-nav">
+      <h1>Devine Power by Hettu</h1>
+      <a href="#calculator" class="cta-link">Get Your Reading</a>
+    </nav>
+
+    <div class="hero-content glow-rise">
+      <p class="tagline">Ancient Wisdom • Sacred Numbers • Planetary Harmony</p>
+      <h2>Traditional Astrology Guidance with Numerology Insights</h2>
+      <p>
+        Step into an old-world spiritual chamber where Vedic-inspired astrology and numerology meet.
+        Understand your destiny path, ruling energies, and cosmic timing with grace and clarity.
+      </p>
+      <div class="hero-icons" aria-hidden="true">
+        <span>🪔 Divine Ritual</span>
+        <span>🔯 Cosmic Map</span>
+        <span>🌙 Moon Guidance</span>
+      </div>
+      <a href="#calculator" class="primary-btn">Reveal My Cosmic Profile</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="zodiac-strip section-card glow-rise">
+      <h3>12 Zodiac Currents</h3>
+      <p class="section-intro">Each sign carries a sacred element and governing planet.</p>
+      <div class="zodiac-grid">
+        <span>♈ Aries</span><span>♉ Taurus</span><span>♊ Gemini</span><span>♋ Cancer</span>
+        <span>♌ Leo</span><span>♍ Virgo</span><span>♎ Libra</span><span>♏ Scorpio</span>
+        <span>♐ Sagittarius</span><span>♑ Capricorn</span><span>♒ Aquarius</span><span>♓ Pisces</span>
+      </div>
+    </section>
+
+    <section class="chakra-map section-card glow-rise delay-1">
+      <h3>Number Chakra Alignment</h3>
+      <p class="section-intro">A sacred chart astrologers use to align number energy with chakra centers.</p>
+      <div class="chakra-grid">
+        <article><h4>1 • 10 • 19</h4><p>Muladhara (Root) • Stability, grounding, survival force.</p></article>
+        <article><h4>2 • 11 • 20</h4><p>Svadhisthana (Sacral) • Emotion, relationships, creativity flow.</p></article>
+        <article><h4>3 • 12 • 21</h4><p>Manipura (Solar Plexus) • Willpower, confidence, life direction.</p></article>
+        <article><h4>4 • 13 • 22</h4><p>Anahata (Heart) • Compassion, healing, devotion path.</p></article>
+        <article><h4>5 • 14 • 23</h4><p>Vishuddha (Throat) • Truth, communication, sacred expression.</p></article>
+        <article><h4>6 • 15 • 24</h4><p>Ajna (Third Eye) • Intuition, insight, spiritual discernment.</p></article>
+        <article><h4>7 • 16 • 25</h4><p>Sahasrara (Crown) • Divine connection and higher guidance.</p></article>
+      </div>
+    </section>
+
+    <section class="about section-card glow-rise delay-2">
+      <h3>Sacred Services</h3>
+      <div class="grid three-col">
+        <article class="service-card">
+          <h4>🔢 Life Path Darshan</h4>
+          <p>Decode the karmic mission carried by your date of birth and year cycle.</p>
+        </article>
+        <article class="service-card">
+          <h4>🕉️ Name Vibration Analysis</h4>
+          <p>Interpret the numeric mantra hidden in your name's letter frequencies.</p>
+        </article>
+        <article class="service-card">
+          <h4>🪐 Planetary Remedies</h4>
+          <p>Receive spiritual guidance aligned with your ruling number and zodiac influence.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="calculator" class="calculator section-card glow-rise delay-3">
+      <h3>Cosmic Numerology Calculator</h3>
+      <p>Enter your details to discover your Life Path, Name Number, and Western zodiac sign.</p>
+
+      <form id="numerologyForm" class="calculator-form">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" name="fullName" type="text" placeholder="e.g., Hettu Sharma" required />
+
+        <label for="dob">Date of Birth</label>
+        <input id="dob" name="dob" type="date" required />
+
+        <button type="submit" class="primary-btn">Open My Horoscope</button>
+      </form>
+
+      <div id="result" class="result" aria-live="polite">
+        Your spiritual profile will appear here after you submit your details.
+      </div>
+    </section>
+
+    <section class="testimonials section-card glow-rise delay-4">
+      <h3>Blessings from Seekers</h3>
+      <blockquote>
+        “The reading felt like sitting with a traditional astrologer—deep, compassionate, and precise.”
+        <cite>— Devine Power Client</cite>
+      </blockquote>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Devine Power by Hettu · Traditional Astrology & Numerology</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
