@@ -87,7 +87,7 @@ function populateSigns() {
   signs.forEach((sign) => {
     const div = document.createElement('div');
     div.className = 'sign-btn glass-card';
-    div.innerHTML = `<i class="${sign.icon} text-3xl mb-3 text-gold/80"></i><span class="text-sm font-semibold tracking-wide">${sign.name}</span>`;
+    div.innerHTML = `<i class="${sign.icon} text-3xl mb-3 text-gold opacity-80"></i><span class="text-sm font-semibold tracking-wide">${sign.name}</span>`;
     div.addEventListener('click', () => renderHoroscope(sign, div));
     signGrid.appendChild(div);
   });
