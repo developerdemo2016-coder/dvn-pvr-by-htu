@@ -1,142 +1,177 @@
-const form = document.getElementById('numerologyForm');
-const resultEl = document.getElementById('result');
+const starField = document.getElementById('starField');
 const yearEl = document.getElementById('year');
+const signGrid = document.getElementById('signGrid');
+const horoscopeDisplay = document.getElementById('horoscopeDisplay');
+const horoscopeLoading = document.getElementById('horoscopeLoading');
 
-const masterNumbers = new Set([11, 22, 33]);
+const signs = [
+  { name: 'Aries', icon: 'fa-solid fa-fire', date: 'Mar 21 - Apr 19' },
+  { name: 'Taurus', icon: 'fa-solid fa-leaf', date: 'Apr 20 - May 20' },
+  { name: 'Gemini', icon: 'fa-solid fa-wind', date: 'May 21 - Jun 20' },
+  { name: 'Cancer', icon: 'fa-solid fa-droplet', date: 'Jun 21 - Jul 22' },
+  { name: 'Leo', icon: 'fa-solid fa-sun', date: 'Jul 23 - Aug 22' },
+  { name: 'Virgo', icon: 'fa-solid fa-seedling', date: 'Aug 23 - Sep 22' },
+  { name: 'Libra', icon: 'fa-solid fa-scale-balanced', date: 'Sep 23 - Oct 22' },
+  { name: 'Scorpio', icon: 'fa-solid fa-skull', date: 'Oct 23 - Nov 21' },
+  { name: 'Sagittarius', icon: 'fa-solid fa-arrow-right', date: 'Nov 22 - Dec 21' },
+  { name: 'Capricorn', icon: 'fa-solid fa-mountain', date: 'Dec 22 - Jan 19' },
+  { name: 'Aquarius', icon: 'fa-solid fa-water', date: 'Jan 20 - Feb 18' },
+  { name: 'Pisces', icon: 'fa-solid fa-fish', date: 'Feb 19 - Mar 20' }
+];
 
-function reduceToSingleOrMaster(value) {
-  let num = value;
-  while (num > 9 && !masterNumbers.has(num)) {
-    num = num
-      .toString()
-      .split('')
-      .reduce((sum, digit) => sum + Number(digit), 0);
+function createStarField() {
+  const starCount = 140;
+  for (let i = 0; i < starCount; i += 1) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 1;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+    starField.appendChild(star);
   }
-  return num;
 }
 
-function calculateLifePath(dateString) {
-  const digits = dateString.replace(/-/g, '').split('').map(Number);
-  const total = digits.reduce((sum, digit) => sum + digit, 0);
-  return reduceToSingleOrMaster(total);
+function seededScore(seed, offset) {
+  return ((seed * 37 + offset * 17) % 46) + 55;
 }
 
-function calculateNameNumber(name) {
-  const cleaned = name.toUpperCase().replace(/[^A-Z]/g, '');
-  const total = cleaned
-    .split('')
-    .reduce((sum, char) => sum + (char.charCodeAt(0) - 64), 0);
+function getLocalHoroscope(signName) {
+  const lines = {
+    Aries: 'Today your fire is magnetic. Lead with courage, but pause before reacting—patience unlocks your next breakthrough.',
+    Taurus: 'Grounded choices bring abundance. A practical step today plants a long-term reward in career and finances.',
+    Gemini: 'Your words carry power now. Honest communication clears misunderstandings and opens a lucky social door.',
+    Cancer: 'Emotional wisdom guides you well. Protect your peace while saying yes to nourishing relationships.',
+    Leo: 'Your light is visible. A bold creative decision attracts support and recognition from the right people.',
+    Virgo: 'Order creates momentum. Small disciplined actions help you resolve a lingering challenge with grace.',
+    Libra: 'Balance becomes your superpower. Harmony in partnerships invites progress in both love and purpose.',
+    Scorpio: 'Transformation energy is strong. Trust intuition and release what no longer aligns with your path.',
+    Sagittarius: 'Adventure calls your spirit. Expand your vision today—one new idea can change your month.',
+    Capricorn: 'Steady effort compounds beautifully. Responsibility handled now becomes future authority and respect.',
+    Aquarius: 'Innovation flows through you. Share an unconventional thought—it may spark a meaningful collaboration.',
+    Pisces: 'Your intuition is heightened. Quiet reflection reveals the exact next step your heart has been seeking.'
+  };
 
-  return reduceToSingleOrMaster(total);
+  return lines[signName] || 'The stars whisper guidance: trust your path and move with faith.';
 }
 
-function getZodiacSign(dateString) {
-  const [, monthString, dayString] = dateString.split('-');
-  const month = Number(monthString);
-  const day = Number(dayString);
+function renderHoroscope(sign, element) {
+  document.querySelectorAll('.sign-btn').forEach((btn) => btn.classList.remove('active-sign'));
+  element.classList.add('active-sign');
 
-  const zodiacBoundaries = [
-    { sign: 'Capricorn ♑', month: 1, day: 19 },
-    { sign: 'Aquarius ♒', month: 2, day: 18 },
-    { sign: 'Pisces ♓', month: 3, day: 20 },
-    { sign: 'Aries ♈', month: 4, day: 19 },
-    { sign: 'Taurus ♉', month: 5, day: 20 },
-    { sign: 'Gemini ♊', month: 6, day: 20 },
-    { sign: 'Cancer ♋', month: 7, day: 22 },
-    { sign: 'Leo ♌', month: 8, day: 22 },
-    { sign: 'Virgo ♍', month: 9, day: 22 },
-    { sign: 'Libra ♎', month: 10, day: 22 },
-    { sign: 'Scorpio ♏', month: 11, day: 21 },
-    { sign: 'Sagittarius ♐', month: 12, day: 21 },
-    { sign: 'Capricorn ♑', month: 12, day: 31 }
+  horoscopeDisplay.classList.remove('hidden');
+  horoscopeLoading.classList.remove('hidden');
+
+  const seed = sign.name.length + new Date().getDate();
+
+  setTimeout(() => {
+    document.getElementById('displayIcon').innerHTML = `<i class="${sign.icon}"></i>`;
+    document.getElementById('displayName').innerText = sign.name;
+    document.getElementById('displayDate').innerText = sign.date;
+    document.getElementById('displayText').innerText = `"${getLocalHoroscope(sign.name)}"`;
+
+    document.getElementById('metricDisplay').innerHTML = `
+      <span class="text-xs border border-white/10 px-3 py-1 rounded-full text-gray-400">✨ Love: ${seededScore(seed, 1)}%</span>
+      <span class="text-xs border border-white/10 px-3 py-1 rounded-full text-gray-400">✨ Career: ${seededScore(seed, 2)}%</span>
+      <span class="text-xs border border-white/10 px-3 py-1 rounded-full text-gray-400">✨ Luck: ${seededScore(seed, 3)}%</span>
+      <span class="text-xs border border-white/10 px-3 py-1 rounded-full text-gray-400">🕉 Chakra: ${seededScore(seed, 4)}%</span>
+    `;
+
+    horoscopeLoading.classList.add('hidden');
+  }, 650);
+}
+
+function populateSigns() {
+  signs.forEach((sign) => {
+    const div = document.createElement('div');
+    div.className = 'sign-btn glass-card';
+    div.innerHTML = `<i class="${sign.icon} text-3xl mb-3 text-gold/80"></i><span class="text-sm font-semibold tracking-wide">${sign.name}</span>`;
+    div.addEventListener('click', () => renderHoroscope(sign, div));
+    signGrid.appendChild(div);
+  });
+}
+
+function getSunSign(dateString) {
+  const [, monthStr, dayStr] = dateString.split('-');
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+  const limits = [
+    { sign: 'Capricorn', m: 1, d: 19 }, { sign: 'Aquarius', m: 2, d: 18 },
+    { sign: 'Pisces', m: 3, d: 20 }, { sign: 'Aries', m: 4, d: 19 },
+    { sign: 'Taurus', m: 5, d: 20 }, { sign: 'Gemini', m: 6, d: 20 },
+    { sign: 'Cancer', m: 7, d: 22 }, { sign: 'Leo', m: 8, d: 22 },
+    { sign: 'Virgo', m: 9, d: 22 }, { sign: 'Libra', m: 10, d: 22 },
+    { sign: 'Scorpio', m: 11, d: 21 }, { sign: 'Sagittarius', m: 12, d: 21 },
+    { sign: 'Capricorn', m: 12, d: 31 }
   ];
 
-  const index = zodiacBoundaries.findIndex(({ month: endMonth, day: endDay }) => month < endMonth || (month === endMonth && day <= endDay));
-  return zodiacBoundaries[index >= 0 ? index : zodiacBoundaries.length - 1].sign;
+  const found = limits.find(({ m, d }) => month < m || (month === m && day <= d));
+  return found ? found.sign : 'Capricorn';
 }
 
-function numberMeaning(number) {
-  const meanings = {
-    1: 'Pioneer energy, leadership, and bold decisions.',
-    2: 'Harmony, diplomacy, and emotional wisdom.',
-    3: 'Expression, creativity, and communication blessings.',
-    4: 'Discipline, grounding, and sacred duty.',
-    5: 'Change, travel, and dynamic life movement.',
-    6: 'Nurturing, family karma, and healing love.',
-    7: 'Intuition, spiritual study, and inner insight.',
-    8: 'Power, prosperity, and material mastery.',
-    9: 'Compassion, service, and wisdom completion.',
-    11: 'Mystic messenger with heightened spiritual intuition.',
-    22: 'Master builder of tangible legacy and purpose.',
-    33: 'Compassionate teacher with healing consciousness.'
-  };
+function buildNatalSummary(name, sun, city) {
+  return `${name}, your Sun shines through ${sun}, giving you a core identity that seeks meaning, expression, and alignment. Your chart indicates strong karmic growth through commitment and inner clarity.
 
-  return meanings[number] || 'A unique vibration guiding your soul path.';
+In ${city}, your birth imprint suggests intuitive intelligence and resilience. Prioritize heart-centered choices, regular grounding rituals, and disciplined spiritual practice for best outcomes.`;
 }
 
-function planetaryGuidance(lifePath) {
-  const planets = {
-    1: 'Sun ☉',
-    2: 'Moon ☾',
-    3: 'Jupiter ♃',
-    4: 'Rahu ☊',
-    5: 'Mercury ☿',
-    6: 'Venus ♀',
-    7: 'Ketu ☋',
-    8: 'Saturn ♄',
-    9: 'Mars ♂',
-    11: 'Moon ☾',
-    22: 'Rahu ☊',
-    33: 'Venus ♀'
-  };
-
-  return planets[lifePath] || 'Cosmic balance';
+function openModal() {
+  document.getElementById('chartModal').style.display = 'flex';
 }
 
-function chakraForNumber(number) {
-  const chakraMap = {
-    1: 'Muladhara (Root) — grounding and life force',
-    2: 'Svadhisthana (Sacral) — emotional and creative flow',
-    3: 'Manipura (Solar Plexus) — confidence and purpose',
-    4: 'Anahata (Heart) — healing and devotion',
-    5: 'Vishuddha (Throat) — truth and expression',
-    6: 'Ajna (Third Eye) — intuition and vision',
-    7: 'Sahasrara (Crown) — divine connection',
-    8: 'Anahata (Heart) — karmic strength and resilience',
-    9: 'Sahasrara (Crown) — wisdom and completion',
-    11: 'Ajna (Third Eye) — mystic intuition',
-    22: 'Muladhara (Root) — manifestation power',
-    33: 'Anahata (Heart) — compassionate service'
-  };
-
-  return chakraMap[number] || 'Balanced chakra stream';
+function closeModal() {
+  document.getElementById('chartModal').style.display = 'none';
 }
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
+function setupBirthForm() {
+  const form = document.getElementById('birthForm');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
 
-  const fullName = form.fullName.value.trim();
-  const dob = form.dob.value;
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    btnText.classList.add('hidden');
+    btnLoader.classList.remove('hidden');
 
-  if (!fullName || !dob) {
-    resultEl.textContent = 'Please enter both your full name and date of birth.';
-    return;
-  }
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const birthDate = document.getElementById('birthDate').value;
+    const city = document.getElementById('birthCity').value.trim();
 
-  const lifePath = calculateLifePath(dob);
-  const nameNumber = calculateNameNumber(fullName);
-  const zodiac = getZodiacSign(dob);
-  const rulingPlanet = planetaryGuidance(lifePath);
-  const chakraFocus = chakraForNumber(lifePath);
+    const sun = getSunSign(birthDate);
+    const moon = signs[(sun.length + 3) % signs.length].name;
+    const rising = signs[(sun.length + 7) % signs.length].name;
 
-  resultEl.innerHTML = `
-    <strong>${fullName}</strong>, your cosmic profile is ready:<br>
-    • <strong>Life Path Number:</strong> ${lifePath} — ${numberMeaning(lifePath)}<br>
-    • <strong>Name Number:</strong> ${nameNumber} — ${numberMeaning(nameNumber)}<br>
-    • <strong>Zodiac Sign:</strong> ${zodiac}<br>
-    • <strong>Ruling Planetary Energy:</strong> ${rulingPlanet}<br>
-    • <strong>Chakra Focus:</strong> ${chakraFocus}
-  `;
-});
+    setTimeout(() => {
+      const container = document.getElementById('aiAnalysis');
+      container.innerHTML = `
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-gold/10 p-4 rounded border border-gold/30 text-center"><div class="text-xs text-gold uppercase tracking-widest">Sun</div><div class="font-cinzel text-xl">${sun}</div></div>
+          <div class="bg-gold/10 p-4 rounded border border-gold/30 text-center"><div class="text-xs text-gold uppercase tracking-widest">Moon</div><div class="font-cinzel text-xl">${moon}</div></div>
+          <div class="bg-gold/10 p-4 rounded border border-gold/30 text-center"><div class="text-xs text-gold uppercase tracking-widest">Rising</div><div class="font-cinzel text-xl">${rising}</div></div>
+        </div>
+        <div class="bg-white/5 p-6 rounded border border-white/10">
+          <p class="text-gold font-cinzel mb-2 uppercase tracking-widest">✨ Soul Blueprint</p>
+          <p class="italic text-sm leading-relaxed">${buildNatalSummary(`${firstName} ${lastName}`, sun, city)}</p>
+        </div>
+      `;
 
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+      openModal();
+    }, 700);
+  });
+}
+
+function setupModalActions() {
+  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+  document.getElementById('acknowledgeBtn').addEventListener('click', closeModal);
+}
+
+createStarField();
+populateSigns();
+setupBirthForm();
+setupModalActions();
 yearEl.textContent = new Date().getFullYear();
