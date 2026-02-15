@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+:root {
+    --cosmos-bg: #05070a;
+    --gold: #d4af37;
+    --star-white: #ffffff;
+}
+
+body {
+    margin: 0;
+    background-color: var(--cosmos-bg);
+    color: var(--star-white);
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.nav-logo {
+    font-family: 'Cinzel', serif;
+}
+
+.text-gold { color: var(--gold); }
+.border-gold { border-color: var(--gold); }
+.bg-gold { background-color: var(--gold); }
+.hover\:text-gold:hover { color: var(--gold); }
+.hover\:bg-gold:hover { background-color: var(--gold); }
+.focus\:border-gold:focus { border-color: var(--gold); }
+
+.star-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at center, #111827 0%, #05070a 100%);
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: twinkle var(--duration) infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.gold-glow {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-5px);
+}
+
+
+.top-nav-card {
+    backdrop-filter: blur(16px);
+}
+
+.top-nav-card:hover {
+    transform: none;
+    border-color: rgba(212, 175, 55, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.sign-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+}
+
+.sign-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.active-sign {
+    background: rgba(212, 175, 55, 0.15) !important;
+    border: 1px solid var(--gold) !important;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.loader {
+    border: 3px solid rgba(212, 175, 55, 0.1);
+    border-top: 3px solid var(--gold);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
